@@ -1,24 +1,54 @@
 = Rsubhak
 
-Recursively walk a hash or array (ha), searching for all occurrences of hash key (k), and substituting (within their values) all occurrences of pattern (p) for replacement (r).
+Recursively walk a hash or array *ha*, searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
 
-= Parameters
+==== Parameters
+*ha*:: hash or array
+*k*:: hash key
+*p*:: pattern
+*r*:: replacement
 
-* ha = hash or array
-* k  = hash key
-* p  = pattern
-* r  = replacement
+The point of inspiration for this gem is essentially to sanitize the params hash,
+so that no matter how deeply nested a *price* or *quantity* might be, one can among
+other things, remove the currency sign and commas from a form input.
+i.e. be able to convert $1,000.00 to 1000.00
+
+As this method is recursive, it can handle deeply nested hashes and arrays, starting from either (see test/).
 
 = Examples
 
-  params={"utf8"=>"y", "authenticity_token"=>"xyz", "type"=>"cheese", "cheese"=>{"cheese_category_id"=>"299", "country_name"=>"France", "region_name"=>"Savoie", "producer_name"=>"aaa", "name"=>"bbb", "year"=>"2001", "new_grapeage_attributes"=>{"1333074807.696388"=>{"cheese_variation"=>{"name"=>"ccc", "_delete"=>""}}}, "description"=>"ddd", "price"=>"$100.00", "remote_image_url"=>"", "new_variant_attributes"=>[{"variation_id"=>"46", "price"=>"$150.00"}, {"variation_id"=>"47", "price"=>"$1,500"}, {"variation_id"=>"48", "price"=>"$10,500"}], "publishable"=>"0"}, "commit"=>"Save this cheese"}
+  irb> require 'rsubhak' => true 
+  irb> params={"price"=>"$1,000.00", "nested"=>[{"id"=>"1", "price"=>"$150.00"}], "commit"=>"Save"}
+  => {"price"=>"$1,000.00", "nested"=>[{"id"=>"1", "price"=>"$150.00"}], "commit"=>"Save"} 
+  irb> Rsubhak.rsubhak(params, :price, /[\$,]/, '')
+  => {"price"=>"1000.00", "nested"=>[{"id"=>"1", "price"=>"150.00"}], "commit"=>"Save"} 
 
-  Rsubhak.rsubhak(params, 'price', /[\$,]/, '')
+To remove or strip any dollar sign or commas:
 
-  => {"utf8"=>"y", "authenticity_token"=>"xyz", "type"=>"cheese", "cheese"=>{"cheese_category_id"=>"299", "country_name"=>"France", "region_name"=>"Savoie", "producer_name"=>"aaa", "name"=>"bbb", "year"=>"2001", "new_grapeage_attributes"=>{"1333074807.696388"=>{"cheese_variation"=>{"name"=>"ccc", "_delete"=>""}}}, "description"=>"ddd", "price"=>"100.00", "remote_image_url"=>"", "new_variant_attributes"=>[{"variation_id"=>"46", "price"=>"150.00"}, {"variation_id"=>"47", "price"=>"1500"}, {"variation_id"=>"48", "price"=>"10500"}], "publishable"=>"0"}, "commit"=>"Save this cheese"} 
+  Rsubhak.rsubhak(params, :price, /[\$,]/, '')
 
-Note that the hash key may also be a symbol. The following is how you would remove Euro signs and periods, and then convert commas to periods, thereby going from '€1.000,00' to '1000.00'.
+To remove the Euro sign and periods, and then convert commas to periods, thereby going from '€1.000,00' to '1000.00':
 
-  Rsubhak.rsubhak(params, 'price', /[€\.]/, '')
-  Rsubhak.rsubhak(params, 'price', /,/, '.')
+  Rsubhak.rsubhak(params, :price, /[€\.]/, '')
+  Rsubhak.rsubhak(params, :price, /,/, '.')
 
+To use it in your Rails project, first add this to your Gemfile:
+
+  gem 'rsubhak', :git => 'git://github.com/abatko/rsubhak.git'
+
+And then in your code, do something like:
+
+  class YourModel < ActiveRecord::Base
+    validates :price, numericality: {greater_than_or_equal_to: 0.01}
+  end
+
+  class YourController < ApplicationController
+    before_filter :sanitize_params
+    # ...
+    protected
+    def sanitize_params
+      Rsubhak.rsubhak(params, :price, /[\$,]/, '') # remove $ and , (commas) from any price in params
+    end
+  end
+
+Note that the hash key may be a string or symbol.
