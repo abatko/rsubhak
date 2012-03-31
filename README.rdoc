@@ -1,8 +1,5 @@
 = Rsubhak
 
-==== Pronunciation
-r sub hak
-
 Recursively traverse a hash or array *ha*, searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
 
 ==== Parameters
@@ -19,6 +16,9 @@ Though modifying price was the initial motivation,
 you may use this gem to do any regex substitution to any hash key's value.
 
 As this method is recursive, it can handle deeply nested hashes and arrays, starting from either (see test/).
+
+==== Pronunciation
+r sub hak
 
 = Examples
 
