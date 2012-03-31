@@ -1,6 +1,9 @@
 = Rsubhak
 
-Recursively walk a hash or array *ha*, searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
+==== Pronunciation
+r sub hak
+
+Recursively traverse a hash or array *ha*, searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
 
 ==== Parameters
 *ha*:: hash or array
@@ -8,10 +11,12 @@ Recursively walk a hash or array *ha*, searching for all occurrences of hash key
 *p*:: pattern
 *r*:: replacement
 
-The point of inspiration for this gem is essentially to sanitize the params hash,
+The point of inspiration for this gem was to sanitize the params hash,
 so that no matter how deeply nested a *price* or *quantity* might be, one can among
-other things, remove the currency sign and commas from a form input.
-i.e. be able to convert $1,000.00 to 1000.00
+other things, remove the currency sign and commas from a form input
+(i.e. convert '$1,000.00' to '1000.00').
+Though modifying price was the initial motivation,
+you may use this gem to do any regex substitution to any hash key's value.
 
 As this method is recursive, it can handle deeply nested hashes and arrays, starting from either (see test/).
 
@@ -47,7 +52,7 @@ And then in your code, do something like:
     # ...
     protected
     def sanitize_params
-      Rsubhak.rsubhak(params, :price, /[\$,]/, '') # remove $ and , (commas) from any price in params
+      Rsubhak.rsubhak(params, :price, /[\$,]/, '') # remove $ and , (commas) from any :price in params
     end
   end
 
