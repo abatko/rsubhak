@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Alex Batko']
   s.email       = ['alexbatko@gmail.com']
 
-  s.homepage    = ''
+  s.homepage    = 'https://github.com/abatko/rsubhak'
 
   s.files       = ['lib/rsubhak.rb']
   s.test_files  = Dir["test/**/*"]
