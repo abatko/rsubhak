@@ -1,7 +1,7 @@
 class Rsubhak
 
   ##
-  # Recursively walk a hash or array *ha*, 
+  # Recursively traverse a hash or array *ha*, 
   # searching for all occurrences of hash key *k*, and substituting
   # (within their values) all occurrences of pattern *p* for replacement *r*.
   #
