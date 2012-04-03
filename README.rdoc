@@ -25,23 +25,23 @@ r sub hak
   irb> require 'rsubhak' => true 
   irb> params={"price"=>"$1,000.00", "nested"=>[{"id"=>"1", "price"=>"$150.00"}], "commit"=>"Save"}
   => {"price"=>"$1,000.00", "nested"=>[{"id"=>"1", "price"=>"$150.00"}], "commit"=>"Save"} 
-  irb> Rsubhak.rsubhak(params, :price, /[\$,]/, '')
+  irb> Rsubhak.rsubhak(params, 'price', /[\$,]/, '')
   => {"price"=>"1000.00", "nested"=>[{"id"=>"1", "price"=>"150.00"}], "commit"=>"Save"} 
 
 To remove or strip any dollar sign or commas:
 
-  Rsubhak.rsubhak(params, :price, /[\$,]/, '')
+  Rsubhak.rsubhak(params, 'price', /[\$,]/, '')
 
 To remove the Euro sign and periods, and then convert commas to periods, thereby going from '€1.000,00' to '1000.00':
 
-  Rsubhak.rsubhak(params, :price, /[€\.]/, '')
-  Rsubhak.rsubhak(params, :price, /,/, '.')
+  Rsubhak.rsubhak(params, 'price', /[€\.]/, '')
+  Rsubhak.rsubhak(params, 'price', /,/, '.')
 
 To use it in your Rails project, first add this to your Gemfile:
 
   gem 'rsubhak', :git => 'git://github.com/abatko/rsubhak.git'
 
-And then in your code, do something like:
+And then in your code, do something like the following. Note that in the Rails app context the hash key may be a symbol.
 
   class YourModel < ActiveRecord::Base
     validates :price, numericality: {greater_than_or_equal_to: 0.01}
@@ -56,4 +56,3 @@ And then in your code, do something like:
     end
   end
 
-Note that the hash key may be a string or symbol.
