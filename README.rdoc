@@ -11,8 +11,9 @@ Recursively traverse a hash or array *ha*, searching for all occurrences of hash
 The point of inspiration for this gem was to sanitize the params hash,
 so that no matter how deeply nested a *price* or *quantity* might be, one can among
 other things, remove the currency sign and commas from a form input
-(i.e. convert '$1,000.00' to '1000.00').
-Though modifying price was the initial motivation,
+(i.e. convert '$1,000.00' to '1000.00'); however there is a much better way of handling this (see below).
+
+Though modifying price and quantity was the initial motivation for this gem,
 you may use this gem to do any regex substitution to any hash key's value.
 
 As this method is recursive, it can handle deeply nested hashes and arrays, starting from either (see test/).
@@ -56,3 +57,26 @@ And then in your code, do something like the following. Note that in the Rails a
     end
   end
 
+= Note on handling price, quantity, etc.
+
+The following is about *price*, but it similarly applies to *quantity*, etc.
+
+Price may be a decimal attribute with `:precision => 8, :scale => 2`, and it must also pass validation:
+
+  validates :price, numericality: {greater_than_or_equal_to: 0.01}
+
+One way to format user input is through a virtual attribute:
+
+  def price_with_currency_and_commas=(new_price)
+    self.price = new_price.gsub(/[\$,]/,'') # note: this will bite you with non-US and non-CA users!
+  end
+
+  def price_with_currency_and_commas
+    price # handle symmetry in products/_form.html.erb with number_to_currency
+  end
+
+  <div class="field">
+    <%= f.label :price_with_currency_and_commas, "Price" %><span class="required">*</span><br />
+    <span class="description">(e.g. 1000 or $1,000.00)</span><br />
+    <%= f.text_field :price_with_currency_and_commas, size: 9, maxlength: 9, value: number_to_currency(@product.price) %>
+  </div>
