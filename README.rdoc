@@ -1,8 +1,12 @@
 = Rsubhak
 
-Recursively traverse a hash or array *ha*, searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
+Recursively traverse a hash or array *ha* (potentially of other nested hashes and/or arrays), doing manipulations.
 
-==== Parameters
+== Rsubhak.rsubhak
+
+Recursively traverse a hash or array *ha* (potentially of other nested hashes and/or arrays), searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
+
+=== Parameters
 *ha*:: hash or array
 *k*:: hash key
 *p*:: pattern
@@ -15,10 +19,10 @@ other things, remove the currency sign and commas from a form input
 
 You may still use this gem to do any regex substitution to any hash key's value. As the method is recursive, it can handle deeply nested hashes and arrays, starting from either (see test/).
 
-==== Pronunciation
+=== Pronunciation
 r sub hak
 
-= Examples
+=== Examples
 
   irb> require 'rsubhak' => true 
   irb> params={"price"=>"$1,000.00", "nested"=>[{"id"=>"1", "price"=>"$150.00"}], "commit"=>"Save"}
@@ -54,7 +58,7 @@ And then in your code, do something like the following. Note that in the Rails a
     end
   end
 
-= Note on handling price, quantity, etc.
+=== Note on handling price, quantity, etc.
 
 Though modifying price and quantity was the initial motivation for this gem, a better way to handle user inputs such as these is through virtual attributes.
 
@@ -75,3 +79,17 @@ One way to handle user input is through a virtual attribute:
   end
 
   <%= f.text_field :price_with_currency_and_commas, value: number_to_currency(@product.price) %>
+
+== Rsubhak.rstrip
+
+Recursively traverse a hash or array *ha* (potentially of other nested hashes and/or arrays), searching for all values that respond to *strip*, and calling *strip!* on them to remove leading and trailing whitespace.
+
+=== Parameters
+*ha*:: hash or array
+
+=== Pronunciation
+r strip
+
+=== Examples
+  rstrip(params)
+
