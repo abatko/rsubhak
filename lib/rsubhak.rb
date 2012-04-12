@@ -1,9 +1,10 @@
 class Rsubhak
 
   ##
-  # Recursively traverse a hash or array *ha*, 
-  # searching for all occurrences of hash key *k*, and substituting
-  # (within their values) all occurrences of pattern *p* for replacement *r*.
+  # Recursively traverse a hash or array *ha* (potentially of other nested
+  # hashes and/or arrays), searching for all occurrences of hash key *k*,
+  # and substituting (within their values) all occurrences of pattern *p*
+  # for replacement *r*.
   #
   # ==== Parameters
   # *ha*:: hash or array
@@ -23,7 +24,7 @@ class Rsubhak
   def self.rsubhak(ha, k, p, r)
     case ha
     when Hash
-      ha[k].gsub!(p, r) if ha[k]
+      ha[k].gsub!(p, r) if ha[k] # base case
       ha.each { |key, value|
         case value
         when Hash
