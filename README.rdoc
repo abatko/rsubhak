@@ -7,6 +7,7 @@ Recursively traverse a hash or array *ha* (potentially of other nested hashes an
 Recursively traverse a hash or array *ha* (potentially of other nested hashes and/or arrays), searching for all occurrences of hash key *k*, and substituting (within their values) all occurrences of pattern *p* for replacement *r*.
 
 === Parameters
+
 *ha*:: hash or array
 *k*:: hash key
 *p*:: pattern
@@ -15,11 +16,12 @@ Recursively traverse a hash or array *ha* (potentially of other nested hashes an
 The point of inspiration for this gem was to sanitize the params hash,
 so that no matter how deeply nested a *price* or *quantity* might be, one can among
 other things, remove the currency sign and commas from a form input
-(i.e. convert '$1,000.00' to '1000.00'); however there is a much better way of handling this (see below).
+(i.e. convert '$1,000.00' to '1000.00'); however there is a better way of handling this (see below).
 
-You may still use this gem to do any regex substitution to any hash key's value. As the method is recursive, it can handle deeply nested hashes and arrays, starting from either (see test/).
+You may still use this gem to do any regex substitution to any hash key's value. As the method is recursive, it can handle deeply nested hashes and arrays, starting from either (see `test/`).
 
 === Pronunciation
+
 r sub hak
 
 === Examples
@@ -85,11 +87,22 @@ One way to handle user input is through a virtual attribute:
 Recursively traverse a hash or array *ha* (potentially of other nested hashes and/or arrays), searching for all values that respond to *strip*, and calling *strip!* on them to remove leading and trailing whitespace.
 
 === Parameters
+
 *ha*:: hash or array
 
 === Pronunciation
+
 r strip
 
 === Examples
+
   rstrip(params)
+
+== Contributing
+
+ 1. Fork it
+ 2. Create your feature branch (`git checkout -b my_new_feature`)
+ 3. Commit your changes (`git commit -am 'Add some feature'`)
+ 4. Push to the branch (`git push origin my_new_feature`)
+ 5. Create new Pull Request
 
