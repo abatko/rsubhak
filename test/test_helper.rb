@@ -1,2 +1,2 @@
 require 'test/unit'
-require 'rsubhak'
+require './lib/rsubhak.rb'
